@@ -52,11 +52,11 @@ public class ForegroundService extends Service {
 
     // Default title of the background notification
     private static final String NOTIFICATION_TITLE =
-            "App is running in background";
+        "App is running in background";
 
     // Default text of the background notification
     private static final String NOTIFICATION_TEXT =
-            "Doing heavy tasks.";
+        "Doing heavy tasks.";
 
     // Default icon of the background notification
     private static final String NOTIFICATION_ICON = "icon";
@@ -126,7 +126,7 @@ public class ForegroundService extends Service {
     private void keepAwake()
     {
         JSONObject settings = BackgroundMode.getSettings();
-        boolean isSilent    = settings.optBoolean("silent", false);
+        boolean isSilent = settings.optBoolean("silent", false);
 
         if (!isSilent) {
             startForeground(NOTIFICATION_ID, makeNotification());
@@ -135,7 +135,7 @@ public class ForegroundService extends Service {
         PowerManager pm = (PowerManager)getSystemService(POWER_SERVICE);
 
         wakeLock = pm.newWakeLock(
-                PARTIAL_WAKE_LOCK, "backgroundmode:wakelock");
+            PARTIAL_WAKE_LOCK, "backgroundmode:wakelock");
 
         wakeLock.acquire();
     }
@@ -172,39 +172,39 @@ public class ForegroundService extends Service {
     private Notification makeNotification (JSONObject settings)
     {
         // use channelid for Oreo and higher
-        String CHANNEL_ID = "cordova-plugin-background-mode-id";
-        if(Build.VERSION.SDK_INT >= 26){
-        // The user-visible name of the channel.
-        CharSequence name = "cordova-plugin-background-mode";
-        // The user-visible description of the channel.
-        String description = "cordova-plugin-background-moden notification";
+        String CHANNEL_ID = "cordova-plugin-background-mode";
 
-        int importance = NotificationManager.IMPORTANCE_LOW;
+        if (Build.VERSION.SDK_INT >= 26) {
+            // The user-visible name of the channel.
+            CharSequence name = "background-mode";
 
-        NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name,importance);
+            // The user-visible description of the channel.
+            String description = "Background Mode";
 
-        // Configure the notification channel.
-        mChannel.setDescription(description);
-
-        getNotificationManager().createNotificationChannel(mChannel);
+            // Configure the notification channel.
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_LOW);
+            mChannel.setDescription(description);
+            getNotificationManager().createNotificationChannel(mChannel);
         }
-        String title    = settings.optString("title", NOTIFICATION_TITLE);
-        String text     = settings.optString("text", NOTIFICATION_TEXT);
+
+        String title = settings.optString("title", NOTIFICATION_TITLE);
+        String text = settings.optString("text", NOTIFICATION_TEXT);
         boolean bigText = settings.optBoolean("bigText", false);
 
         Context context = getApplicationContext();
-        String pkgName  = context.getPackageName();
-        Intent intent   = context.getPackageManager()
-                .getLaunchIntentForPackage(pkgName);
+        String pkgName = context.getPackageName();
+
+        Intent intent = context.getPackageManager()
+            .getLaunchIntentForPackage(pkgName);
 
         Notification.Builder notification = new Notification.Builder(context)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setOngoing(true)
-                .setSmallIcon(getIconResId(settings));
+            .setContentTitle(title)
+            .setContentText(text)
+            .setOngoing(true)
+            .setSmallIcon(getIconResId(settings));
 
         if(Build.VERSION.SDK_INT >= 26){
-                   notification.setChannelId(CHANNEL_ID);
+            notification.setChannelId(CHANNEL_ID);
         }
 
         if (settings.optBoolean("hidden", true)) {
@@ -213,17 +213,17 @@ public class ForegroundService extends Service {
 
         if (bigText || text.contains("\n")) {
             notification.setStyle(
-                    new Notification.BigTextStyle().bigText(text));
+                new Notification.BigTextStyle().bigText(text));
         }
 
         setColor(notification, settings);
 
         if (intent != null && settings.optBoolean("resume")) {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent contentIntent = PendingIntent.getActivity(
-                    context, NOTIFICATION_ID, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
 
+            PendingIntent contentIntent = PendingIntent.getActivity(
+                context, NOTIFICATION_ID, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
             notification.setContentIntent(contentIntent);
         }
@@ -247,7 +247,6 @@ public class ForegroundService extends Service {
 
         Notification notification = makeNotification(settings);
         getNotificationManager().notify(NOTIFICATION_ID, notification);
-
     }
 
     /**
@@ -258,7 +257,6 @@ public class ForegroundService extends Service {
     private int getIconResId (JSONObject settings)
     {
         String icon = settings.optString("icon", NOTIFICATION_ICON);
-
         int resId = getIconResId(icon, "mipmap");
 
         if (resId == 0) {
@@ -280,7 +278,6 @@ public class ForegroundService extends Service {
     {
         Resources res  = getResources();
         String pkgName = getPackageName();
-
         int resId = res.getIdentifier(icon, type, pkgName);
 
         if (resId == 0) {
@@ -299,7 +296,6 @@ public class ForegroundService extends Service {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setColor (Notification.Builder notification, JSONObject settings)
     {
-
         String hex = settings.optString("color", null);
 
         if (Build.VERSION.SDK_INT < 21 || hex == null)
