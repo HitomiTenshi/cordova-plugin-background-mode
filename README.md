@@ -21,7 +21,6 @@ Use the plugin by your own risk!
 - __Android/Amazon FireOS__
 - __Browser__
 - __iOS__
-- __Windows__ _(see #222)_
 
 
 ## Installation
@@ -174,7 +173,7 @@ Various APIs like playing media or tracking GPS position in background might not
 
 ```js
 cordova.plugins.backgroundMode.on('activate', function() {
-   cordova.plugins.backgroundMode.disableWebViewOptimizations(); 
+   cordova.plugins.backgroundMode.disableWebViewOptimizations();
 });
 ```
 
